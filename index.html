@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shoppinglist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+
+</head>
+<body>
+<section id="shopping-list" class="grid-container">
+
+    <header>Shopping list!</header>
+
+    <form
+            class="form-register"
+            v-on:submit.prevent="addNewShoppingThing"
+    >
+
+        <input
+                v-model="newShoppingThing"
+                placeholder="Add new thing to shop"
+        >
+        <button class="btn-register">Add</button>
+    </form>
+
+
+        <ul>
+
+            <li
+                    is="shopping-thing"
+                    v-for="(thing, index) in shoppingList"
+                    v-bind:style="{color: thing.checkedColor}"
+                    v-bind:key="thingId"
+                    v-bind:name="thing.title"
+                    v-on:delete="shoppingList.splice(index, 1)"
+                    v-on:check="checkDone(index)"
+
+            >
+
+
+            </li>
+        </ul>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+
+    Vue.component('shopping-thing', {
+        template:
+
+                `
+        <li>
+
+        <input class="container" type="checkbox"  v-on:change="$emit('check')">
+        {{ name }}
+        <button class="btn-register-list" v-on:click="$emit('delete')">Delete</button>
+        </li>
+        `,
+
+        props: ['name']
+    })
+
+    new Vue({
+        el: '#shopping-list',
+        data: {
+
+            newShoppingThing: '',
+            shoppingList: [
+                {
+                    id: 1,
+                    title: 'Kaffe',
+                    checkedColor: 'black',
+                    checked: false
+                }
+            ],
+            thingId: 2,
+
+
+        },
+
+        methods: {
+
+            addNewShoppingThing: function () {
+                this.shoppingList.push({
+                    id: this.thingId++,
+                    title: this.newShoppingThing,
+                    checkedColor: 'black',
+                    checked: false
+
+
+
+                })
+                this.newShoppingThing = ''
+
+            },
+           checkDone: function(selected){
+                if(this.shoppingList[selected].checked === true){
+                    this.shoppingList[selected].checked= false;
+                    this.shoppingList[selected].checkedColor='black';
+                }else {
+                    this.shoppingList[selected].checked= true;
+                    this.shoppingList[selected].checkedColor='grey';
+
+                }
+
+
+
+
+            }
+        }
+    })
+
+
+
+    </script>
+
+
+</body>
+</html>
